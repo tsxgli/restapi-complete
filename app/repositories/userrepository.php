@@ -19,6 +19,9 @@ class UserRepository extends Repository
             $stmt->setFetchMode(PDO::FETCH_CLASS, 'Models\User');
             $user = $stmt->fetch();
 
+            if (!$user)
+            return false;
+
             // verify if the password matches the hash in the database
             $result = $this->verifyPassword($password, $user->password);
 
