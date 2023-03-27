@@ -30,5 +30,13 @@ $router->delete('/categories/(\d+)', 'CategoryController@delete');
 // routes for the users endpoint
 $router->post('/users/login', 'UserController@login');
 
+// routes for the movies endpoint
+$router->get('/movies', 'MovieController@getAll');
+$router->get('/movies/(\d+)', 'MovieController@getMovie');
+$router->post('/movies', 'MovieController@addMovie');
+$router->put('/movies/(\d+)', 'MovieController@updateMovie');
+$router->delete('/movies/(\d+)', 'MovieController@deleteMovie');
+$router->get('/genres/([a-zA-Z]+)', 'MovieController@getGenre');
+
 // Run it!
 $router->run();
