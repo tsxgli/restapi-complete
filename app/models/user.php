@@ -2,12 +2,15 @@
 namespace Models;
 
 class User {
-
-    public int $id;
-    public string $username;
-    public string $password;
-    public string $email;
-
+	private int $id;
+    private string $firstname;
+    private string $lastname;
+    private string $postcode;
+    private string $address; 
+    private string $birthdate;
+    private string $email;
+    private string $password;
+    private bool $isAdmin;
 }
 
 ?>

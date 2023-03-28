@@ -25,7 +25,6 @@ class MovieController extends Controller
         }
 
         $movies = $this->movieservice->getAll($offset, $limit);
-
        $this->respond($movies);
     }
   
@@ -82,10 +81,7 @@ class MovieController extends Controller
 
         $_SESSION['cartItems'] = $movie;
 
-
     }
-
-
     
     public function addMovie()
     {

@@ -22,7 +22,7 @@ class UserController extends Controller
         $postedUser = $this->createObjectFromPostedJson("Models\\User");
 
         // get user from db
-        $user = $this->service->checkUsernamePassword($postedUser->username, $postedUser->password);
+        $user = $this->service->checkUsernamePassword($postedUser->email, $postedUser->password);
 
         // if the method returned false, the username and/or password were incorrect
         if(!$user) {
@@ -72,4 +72,40 @@ class UserController extends Controller
                 "expireAt" => $expire
             );
     }    
+    public function register()
+    {
+        try {
+            $user = $this->createObjectFromPostedJson("Models\\User");
+
+             $this->service->registerUser($user);
+
+            $this->respond($user);
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
+        }
+        
+    }
+    public function getAll(){
+        try {
+            $token = $this->checkForJwt();
+            if (!$token)
+                return;
+                
+            $offset = NULL;
+            $limit = NULL;
+    
+            if (isset($_GET["offset"]) && is_numeric($_GET["offset"])) {
+                $offset = $_GET["offset"];
+            }
+            if (isset($_GET["limit"]) && is_numeric($_GET["limit"])) {
+                $limit = $_GET["limit"];
+            }
+    
+            $users = $this->service->getAllUsers($limit , $offset);
+            $this->respond($users);
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
+        }
+    }
+
 }
