@@ -58,8 +58,9 @@ class UserController extends Controller
             "exp" => $expire,
             "data" => array(
                 "id" => $user->id,
-                "username" => $user->username,
-                "email" => $user->email
+                "email" => $user->email,
+                "firstname"=> $user->firstname,
+
         ));
 
         $jwt = JWT::encode($payload, $secret_key, 'HS256');
@@ -68,7 +69,9 @@ class UserController extends Controller
             array(
                 "message" => "Successful login.",
                 "jwt" => $jwt,
-                "username" => $user->username,
+                "email" => $user->email,
+                "id" => $user->id,
+                "firstname" => $user->firstname,
                 "expireAt" => $expire
             );
     }    
