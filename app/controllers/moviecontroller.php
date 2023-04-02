@@ -14,9 +14,9 @@ class MovieController extends Controller
     }
     public function getAll()
     {
-        $token = $this->checkForJwt();
-        if (!$token)
-            return;
+        // $token = $this->checkForJwt();
+        // if (!$token)
+        //     return;
         $offset = NULL;
         $limit = NULL;
 
