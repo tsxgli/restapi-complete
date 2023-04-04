@@ -16,7 +16,8 @@ class UserController extends Controller
         $this->service = new UserService();
     }
 
-    public function login() {
+    public function login()
+    {
 
         // read user data from request body
         $postedUser = $this->createObjectFromPostedJson("Models\\User");
@@ -25,18 +26,19 @@ class UserController extends Controller
         $user = $this->service->checkUsernamePassword($postedUser->email, $postedUser->password);
 
         // if the method returned false, the username and/or password were incorrect
-        if(!$user) {
+        if (!$user) {
             $this->respondWithError(401, "Invalid login");
             return;
         }
 
         // generate jwt
-        $tokenResponse = $this->generateJwt($user);       
+        $tokenResponse = $this->generateJwt($user);
 
-        $this->respond($tokenResponse);    
+        $this->respond($tokenResponse);
     }
 
-    public function generateJwt($user) {
+    public function generateJwt($user)
+    {
         $secret_key = "YOUR_SECRET_KEY";
 
         $issuer = "THE_ISSUER"; // this can be the domain/servername that issues the token
@@ -59,13 +61,14 @@ class UserController extends Controller
             "data" => array(
                 "id" => $user->id,
                 "email" => $user->email,
-                "firstname"=> $user->firstname,
+                "firstname" => $user->firstname,
 
-        ));
+            )
+        );
 
         $jwt = JWT::encode($payload, $secret_key, 'HS256');
 
-        return 
+        return
             array(
                 "message" => "Successful login.",
                 "jwt" => $jwt,
@@ -74,37 +77,42 @@ class UserController extends Controller
                 "firstname" => $user->firstname,
                 "expireAt" => $expire
             );
-    }    
+    }
     public function register()
     {
         try {
             $user = $this->createObjectFromPostedJson("Models\\User");
+            $exists = $this->service->checkUsernamePassword($user->email, $user->password);
 
-             $this->service->registerUser($user);
+            if ($exists) {
+                $this->respondWithError(500, "User already exists");
+                return;
+            }
+            $this->respondWithCode(201, $user);
 
-            $this->respond($user);
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
         }
-        
+
     }
-    public function getAll(){
+    public function getAll()
+    {
         try {
             $token = $this->checkForJwt();
             if (!$token)
                 return;
-                
+
             $offset = NULL;
             $limit = NULL;
-    
+
             if (isset($_GET["offset"]) && is_numeric($_GET["offset"])) {
                 $offset = $_GET["offset"];
             }
             if (isset($_GET["limit"]) && is_numeric($_GET["limit"])) {
                 $limit = $_GET["limit"];
             }
-    
-            $users = $this->service->getAllUsers($limit , $offset);
+
+            $users = $this->service->getAllUsers($limit, $offset);
             $this->respond($users);
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
