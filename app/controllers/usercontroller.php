@@ -89,6 +89,7 @@ class UserController extends Controller
                 return;
             }
             $this->respondWithCode(201, $user);
+            $this->service->registerUser($user);
 
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
