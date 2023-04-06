@@ -24,8 +24,8 @@ class UserService {
     public function getOne($id) {
         return $this->repository->getOne($id);
     }
-    public function updateUser($id, $firstname, $lastname, $email, $address, $postcode, $birthdate) {
-        return $this->repository->updateUser($id, $firstname, $lastname, $email, $address, $postcode, $birthdate);
+    public function updateUser($id,$user) {
+        return $this->repository->updateUser($id,$user);
     }
     public function deleteUser($id) {
         return $this->repository->deleteUser($id);

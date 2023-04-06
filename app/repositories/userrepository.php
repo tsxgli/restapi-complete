@@ -125,17 +125,17 @@ class UserRepository extends Repository
             echo $e;
         }
     }
-    public function updateUser($id, $firstname, $lastname, $email, $address, $postcode, $birthdate)
+    public function updateUser($id,$user)
     {
         try {
             $stmt = $this->connection->prepare("UPDATE User SET firstname = :firstname, lastname = :lastname, email = :email, address = :address, postcode = :postcode, birthdate = :birthdate WHERE id = :id");
             $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':firstname', $firstname);
-            $stmt->bindParam(':lastname', $lastname);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':address', $address);
-            $stmt->bindParam(':postcode', $postcode);
-            $stmt->bindParam(':birthdate', $birthdate);
+            $stmt->bindParam(':firstname', $user->firstname);
+            $stmt->bindParam(':lastname', $user->lastname);
+            $stmt->bindParam(':email', $user->email);
+            $stmt->bindParam(':address', $user->address);
+            $stmt->bindParam(':postcode', $user->postcode);
+            $stmt->bindParam(':birthdate', $user->birthdate);
             $stmt->execute();
         } catch (PDOException $e) {
             echo $e;
@@ -146,7 +146,8 @@ class UserRepository extends Repository
         try {
             $stmt = $this->connection->prepare("DELETE FROM User WHERE id = :id");
             $stmt->bindParam(':id', $id);
-            $stmt->execute();
+           return $stmt->execute();
+             
         } catch (PDOException $e) {
             echo $e;
         }

@@ -33,6 +33,8 @@ $router->post('/users/register', 'UserController@register');
 $router->get('/users', 'UserController@getAll');
 $router->get('/users/(\d+)', 'UserController@getOne');
 $router->post('/users/checkAdmin/(\d+)', 'UserController@checkAdmin');
+$router->put('/users/(\d+)', 'UserController@updateUser');
+$router->delete('/users/(\d+)', 'UserController@deleteUser');
 
 // routes for the movies endpoint
 $router->get('/movies', 'MovieController@getAll');

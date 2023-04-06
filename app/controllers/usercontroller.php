@@ -134,21 +134,53 @@ class UserController extends Controller
             $this->respondWithError(500, $e->getMessage());
         }
     }
-public function getOne($id){
-    try {
-        $token = $this->checkForJwt();
-        if (!$token) {
-            return;
-        }
+    public function getOne($id)
+    {
+        try {
+            $token = $this->checkForJwt();
+            if (!$token) {
+                return;
+            }
 
-        $user = $this->service->getOne($id);
-        if (empty($user)) {
-            $this->respondWithError(404, "User not found");
-            return;
+            $user = $this->service->getOne($id);
+            if (empty($user)) {
+                $this->respondWithError(404, "User not found");
+                return;
+            }
+            $this->respond($user);
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
         }
-        $this->respond($user);
-    } catch (Exception $e) {
-        $this->respondWithError(500, $e->getMessage());
     }
-}
+    public function updateUser($id)
+    {
+        try {
+            $token = $this->checkForJwt();
+            if (!$token) {
+                return;
+            }
+            $user = $this->createObjectFromPostedJson("Models\\User");
+           
+            $this->service->updateUser($id, $user);
+            $this->respondWithCode(204, $user);
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
+        }
+    }
+    public function deleteUser($id){
+        try {
+            $token = $this->checkForJwt();
+            if (!$token) {
+                return;
+            }
+            $user = $this->service->deleteUser($id);
+            if (empty($user)) {
+                $this->respondWithError(404, "User not found");
+                return;
+            }
+            $this->respondWithCode(204, $user);
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
+        }
+    }
 }
