@@ -21,8 +21,8 @@ class UserService {
     public function registerUser($user) {
         return $this->repository->registerUser($user);
     }
-    public function getUser($id) {
-        return $this->repository->getUser($id);
+    public function getOne($id) {
+        return $this->repository->getOne($id);
     }
     public function updateUser($id, $firstname, $lastname, $email, $address, $postcode, $birthdate) {
         return $this->repository->updateUser($id, $firstname, $lastname, $email, $address, $postcode, $birthdate);
@@ -36,6 +36,7 @@ class UserService {
     public function checkAdmin($id){
         return $this->repository->checkAdmin($id);
     }
+
 }
 
 ?>

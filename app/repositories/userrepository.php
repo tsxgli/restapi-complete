@@ -110,7 +110,7 @@ class UserRepository extends Repository
         $user->isAdmin = $row['isAdmin'];
         return $user;
     }
-    public function getUser($id)
+    public function getOne($id)
     {
         try {
             $stmt = $this->connection->prepare("SELECT * FROM User WHERE id = :id");

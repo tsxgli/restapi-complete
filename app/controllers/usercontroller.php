@@ -129,17 +129,26 @@ class UserController extends Controller
                 $this->respondWithError(404, "User not found");
                 return;
             }
-
-            if (!$user->isAdmin) {
-                $this->respondWithError(403, "User is not an admin.");
-                return;
-            }
-
             $this->respond($user);
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
         }
-
     }
+public function getOne($id){
+    try {
+        $token = $this->checkForJwt();
+        if (!$token) {
+            return;
+        }
 
+        $user = $this->service->getOne($id);
+        if (empty($user)) {
+            $this->respondWithError(404, "User not found");
+            return;
+        }
+        $this->respond($user);
+    } catch (Exception $e) {
+        $this->respondWithError(500, $e->getMessage());
+    }
+}
 }
