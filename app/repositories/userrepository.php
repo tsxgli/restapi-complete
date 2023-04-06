@@ -21,7 +21,7 @@ class UserRepository extends Repository
             $user = $stmt->fetch();
 
             if (!$user)
-            return false;
+                return false;
 
             // verify if the password matches the hash in the database
             $result = $this->verifyPassword($password, $user->password);
@@ -52,8 +52,8 @@ class UserRepository extends Repository
             $stmt->bindValue(':birthdate', $user->birthdate, PDO::PARAM_STR);
             $stmt->bindValue(':isAdmin', $user->isAdmin, PDO::PARAM_BOOL);
 
-          return $stmt->execute();
-            
+            return $stmt->execute();
+
         } catch (PDOException $e) {
             echo "Registering user failed: " . $e->getMessage();
         }
@@ -88,7 +88,7 @@ class UserRepository extends Repository
             $stmt->execute();
 
             $users = array();
-            while (($row = $stmt->fetch(PDO::FETCH_ASSOC)) !== false) {               
+            while (($row = $stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
                 $users[] = $this->rowToUser($row);
             }
 
@@ -97,7 +97,8 @@ class UserRepository extends Repository
             echo $e;
         }
     }
-    function rowToUser($row){
+    function rowToUser($row)
+    {
         $user = new User();
         $user->id = $row['id'];
         $user->firstname = $row['firstname'];
@@ -115,7 +116,7 @@ class UserRepository extends Repository
             $stmt = $this->connection->prepare("SELECT * FROM User WHERE id = :id");
             $stmt->bindParam(':id', $id);
             $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Models\User');
             $user = $stmt->fetch();
 
             return $user;
@@ -146,6 +147,20 @@ class UserRepository extends Repository
             $stmt = $this->connection->prepare("DELETE FROM User WHERE id = :id");
             $stmt->bindParam(':id', $id);
             $stmt->execute();
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+    public function checkAdmin($id)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT isAdmin FROM User WHERE id = :id");
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Models\User');
+            $user = $stmt->fetch();
+            return $user;
+
         } catch (PDOException $e) {
             echo $e;
         }

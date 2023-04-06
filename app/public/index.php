@@ -31,6 +31,8 @@ $router->delete('/categories/(\d+)', 'CategoryController@delete');
 $router->post('/users/login', 'UserController@login');
 $router->post('/users/register', 'UserController@register');
 $router->get('/users', 'UserController@getAll');
+$router->get('/users/(\d+)', 'UserController@getOne');
+$router->post('/users/checkAdmin/(\d+)', 'UserController@checkAdmin');
 
 // routes for the movies endpoint
 $router->get('/movies', 'MovieController@getAll');

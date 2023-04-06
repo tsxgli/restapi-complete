@@ -18,7 +18,6 @@ class UserController extends Controller
 
     public function login()
     {
-
         // read user data from request body
         $postedUser = $this->createObjectFromPostedJson("Models\\User");
 
@@ -40,13 +39,12 @@ class UserController extends Controller
     public function generateJwt($user)
     {
         $secret_key = "YOUR_SECRET_KEY";
-
         $issuer = "THE_ISSUER"; // this can be the domain/servername that issues the token
         $audience = "THE_AUDIENCE"; // this can be the domain/servername that checks the token
 
         $issuedAt = time(); // issued at
         $notbefore = $issuedAt; //not valid before 
-        $expire = $issuedAt + 600; // expiration time is set at +600 seconds (10 minutes)
+        $expire = $issuedAt + 1000; // expire in 10 minutes
 
         // JWT expiration times should be kept short (10-30 minutes)
         // A refresh token system should be implemented if we want clients to stay logged in for longer periods
@@ -62,7 +60,6 @@ class UserController extends Controller
                 "id" => $user->id,
                 "email" => $user->email,
                 "firstname" => $user->firstname,
-
             )
         );
 
@@ -118,6 +115,31 @@ class UserController extends Controller
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
         }
+    }
+    public function checkAdmin($id)
+    {
+        try {
+            $token = $this->checkForJwt();
+            if (!$token) {
+                return;
+            }
+
+            $user = $this->service->checkAdmin($id);
+            if (empty($user)) {
+                $this->respondWithError(404, "User not found");
+                return;
+            }
+
+            if (!$user->isAdmin) {
+                $this->respondWithError(403, "User is not an admin.");
+                return;
+            }
+
+            $this->respond($user);
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
+        }
+
     }
 
 }

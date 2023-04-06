@@ -18,7 +18,6 @@ class UserService {
     public function hashPassword($password) {
         return $this->repository->hashPassword($password);
     }
-
     public function registerUser($user) {
         return $this->repository->registerUser($user);
     }
@@ -33,6 +32,9 @@ class UserService {
     }
     public function getAllUsers($limit = NULL, $offset = NULL) {
         return $this->repository->getAllUsers( $limit, $offset);
+    }
+    public function checkAdmin($id){
+        return $this->repository->checkAdmin($id);
     }
 }
 
