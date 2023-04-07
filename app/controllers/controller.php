@@ -78,4 +78,21 @@ class Controller
         }
         return $object;
     }
+    protected function sanitize($data)
+    {
+        if (is_object($data)) {
+            foreach ($data as $key => $value) {
+                if (is_string($value)) {
+                    $data->$key = htmlspecialchars($value);
+                }
+            }
+        } else if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                if (is_string($value)) {
+                    $data[$key] = htmlspecialchars($value);
+                }
+            }
+        }
+        return $data;
+    }
 }

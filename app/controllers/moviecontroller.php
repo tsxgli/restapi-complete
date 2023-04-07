@@ -4,6 +4,7 @@ namespace Controllers;
 use Exception;
 use Firebase\JWT\JWT;
 use Services\MovieService;
+use Models\Movie;
 
 class MovieController extends Controller
 {
@@ -106,20 +107,25 @@ class MovieController extends Controller
     public function addMovie()
     {
         try {
+            $newImageName = "";
             $token = $this->checkForJwt();
             if (!$token) {
                 return;
             }
-            $movie = $this->createObjectFromPostedJson("Models\\Movie");
-            
+            //$movie= $this->createObjectFromPostedJson("Models\\Movie");
+              
+              $movie= $this->sanitize(json_decode($_POST['movieDetails']));
 
-            if(isset($_FILES['image'])){
-                $image = $this->movePicture($_FILES['image']);
+            if (isset($_FILES['image'])) {
+                $newImageName = $this->movePicture($_FILES['image']);
+                $movie->image = $newImageName;
+            } else {
+                $movie->image = "default.jpg";
             }
-            $movie->image=$image;
-            $movie = $this->movieservice->addMovie($movie);
+            $uploadedMovie = $this->movieservice->addMovie($movie);
 
-            $this->respondWithCode(200,$movie);
+            $this->respondWithCode(200, $uploadedMovie);
+
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
         }
