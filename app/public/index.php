@@ -44,8 +44,11 @@ $router->put('/movies/(\d+)', 'MovieController@updateMovie');
 $router->delete('/movies/(\d+)', 'MovieController@deleteMovie');
 $router->get('/genres/([a-zA-Z]+)', 'MovieController@getGenre');
 
+
 //router for checkout
 $router->post('/checkout', 'OrderController@checkout');
+$router->post('/sendEmail', 'OrderController@sendMovieInEmail');
+$router->post('/orders', 'OrderController@insertOrder');
 
 // Run it!
 $router->run();

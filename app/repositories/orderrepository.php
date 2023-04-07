@@ -15,10 +15,13 @@ class OrderRepository extends Repository
             $query = "INSERT INTO Orders (userId, dateOrdered, movieId) VALUES (:userId, :dateOrdered, :movieId)";
 
             $stmt = $this->connection->prepare($query);
-            $stmt->bindValue(':movieId', $order->getMovieID());
-            $stmt->bindValue(':dateOrdered', $order->getDateOrdered());
-            $stmt->bindValue(':userId', $order->getUserID());
+            $stmt->bindValue(':movieId', $order->movieID);
+            $stmt->bindValue(':dateOrdered', $order->dateOrdered);
+            $stmt->bindValue(':userId', $order->userID);
             $stmt->execute();
+
+            $newOrderId= $this->connection->lastInsertId(); 
+            return $this->getOne($newOrderId);
         } catch (PDOException $e) {
             echo $e;
         }
@@ -28,10 +31,25 @@ class OrderRepository extends Repository
         try {
             $stmt = $this->connection->prepare("SELECT * FROM Orders");
             $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Order');
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Models\Order');
             $movies = $stmt->fetchAll();
 
             return $movies;
+
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+    public function getOne($id){
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM Orders where id = :id");
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Models\Order');
+            $order = $stmt->fetchAll();
+
+            return $order;
 
         } catch (PDOException $e) {
             echo $e;
