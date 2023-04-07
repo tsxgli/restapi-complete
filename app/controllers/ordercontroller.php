@@ -1,8 +1,9 @@
 <?php
 namespace Controllers;
-require __DIR__ . '../../vendor/autoload.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 
+require __DIR__ . '../../vendor/autoload.php';
 
 use Exception;
 use Services\MovieService;
@@ -80,24 +81,24 @@ class OrderController extends Controller
         }
 
     }
+
     public function sendMovieInEmail()
     {
         try {
-
-            $email=json_decode(file_get_contents("php://input",true));
-            $emailString = (string) $email->email;
-
-            $this->sendEmail($emailString);
-            $this->respondWithCode(200,$email);
+            $email = (file_get_contents("php://input"));
+            print_r($email);
+            $this->sendEmail($email);
+            $this->respondWithCode(200, $email);
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
         }
     }
-    public function insertOrder(){
-        try{
+    public function insertOrder()
+    {
+        try {
             $order = $this->createObjectFromPostedJson("Models\\Order");
-           $postedOrder= $this->orderService->insertOrder($order);
-            $this->respondWithCode(200,$postedOrder);
+            $postedOrder = $this->orderService->insertOrder($order);
+            $this->respondWithCode(200, $postedOrder);
 
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
