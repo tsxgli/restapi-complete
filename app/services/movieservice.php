@@ -22,9 +22,9 @@ class MovieService {
     public function deleteMovie($id){
        return $this->repository->deleteMovie($id);
     }
-    public function updateMovie( $id,$title, $description, $genre, $rating, $dateProduced, $price, $director, $image)
+    public function updateMovie( $movie)
     {
-        $this->repository->updateMovie($id,$title, $description, $genre, $rating, $dateProduced, $price, $director, $image);
+        $this->repository->updateMovie($movie);
     }
     public function addMovie($data){
         $this->repository->addMovie($data);

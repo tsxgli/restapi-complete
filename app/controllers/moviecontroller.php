@@ -2,6 +2,7 @@
 namespace Controllers;
 
 use Exception;
+use Firebase\JWT\JWT;
 use Services\MovieService;
 
 class MovieController extends Controller
@@ -29,14 +30,14 @@ class MovieController extends Controller
         }
 
         $movies = $this->movieservice->getAll($offset, $limit);
-       $this->respond($movies);
+        $this->respond($movies);
     }
-  
+
     public function getGenre(string $filter)
     {
         $model = $this->movieservice->filterMovies($filter);
         $this->respond($model);
-       
+
     }
     public function getMovie($id)
     {
@@ -53,21 +54,21 @@ class MovieController extends Controller
         $model = $this->movieservice->getAll();
         require __DIR__ . '/../views/admin/moviesmanagement.php';
     }
-    public function deleteMovie()
+    public function deleteMovie($id)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $_GET['id'];
-
-            $success = $this->movieservice->deleteMovie($id);
-            if ($success) {
-                http_response_code(200);
-                echo json_encode(["movies" => $this->movieservice->getAll()]);
-            } else {
-                http_response_code(400);
-                echo json_encode(["error" => "Failed to delete movie."]);
+        try {
+            $token = $this->checkForJwt();
+            if (!$token) {
+                return;
             }
-        } else {
-            http_response_code(405);
+            $movie = $this->movieservice->deleteMovie($id);
+            if(!$movie){
+                $this->respondWithError(404, "Movie not found");
+                return;
+            }
+            $this->respondWithCode(200, "Movie deleted");
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
         }
     }
 
@@ -86,7 +87,22 @@ class MovieController extends Controller
         $_SESSION['cartItems'] = $movie;
 
     }
-    
+    public function updateMovie()
+    {
+        try {
+            $token = $this->checkForJwt();
+            if (!$token) {
+                return;
+            }
+            $movie = $this->createObjectFromPostedJson("Models\\Movie");
+            $movie = $this->movieservice->updateMovie($movie);
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
+        }
+
+
+    }
+
     public function addMovie()
     {
         // A list of permitted file extensions

@@ -75,22 +75,21 @@ class MovieRepository extends Repository
         }
     }
 
-    function updateMovie($id, $title, $description, $genre, $rating, $dateProduced, $price, $director, $image)
+    function updateMovie($movie)
     {
 
         try {
             $stmt = $this->connection->prepare("UPDATE Movie SET title = :title, description = :description, 
                                     director = :director, dateProduced = :dateProduced, 
-                                    genre = :genre, image=:image,rating = :rating, price = :price WHERE _id = :id");
-            $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':title', $title);
-            $stmt->bindParam(':description', $description);
-            $stmt->bindParam(':director', $director);
-            $stmt->bindParam(':dateProduced', $dateProduced);
-            $stmt->bindParam(':genre', $genre);
-            $stmt->bindParam(':rating', $rating);
-            $stmt->bindParam(':price', $price);
-            $stmt->bindParam(':image', $image);
+                                    genre = :genre, rating = :rating, price = :price WHERE _id = :id");
+            $stmt->bindParam(':id', $movie->_id);
+            $stmt->bindParam(':title', $movie->title);
+            $stmt->bindParam(':description', $movie->description);
+            $stmt->bindParam(':director', $movie->director);
+            $stmt->bindParam(':dateProduced', $movie->dateProduced);
+            $stmt->bindParam(':genre', $movie->genre);
+            $stmt->bindParam(':rating', $movie->rating);
+            $stmt->bindParam(':price', $movie->price);
             $stmt->execute();
 
 
