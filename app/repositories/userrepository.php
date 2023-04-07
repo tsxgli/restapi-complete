@@ -52,8 +52,10 @@ class UserRepository extends Repository
             $stmt->bindValue(':birthdate', $user->birthdate, PDO::PARAM_STR);
             $stmt->bindValue(':isAdmin', $user->isAdmin, PDO::PARAM_BOOL);
 
-            return $stmt->execute();
-
+             $stmt->execute();
+            $movieId=$this->connection->lastInsertId();
+            return $this->getOne($movieId);
+           
         } catch (PDOException $e) {
             echo "Registering user failed: " . $e->getMessage();
         }

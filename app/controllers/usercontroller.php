@@ -85,9 +85,8 @@ class UserController extends Controller
                 $this->respondWithError(500, "User already exists");
                 return;
             }
-            $this->respondWithCode(201, $user);
-            $this->service->registerUser($user);
-
+            $registeredUser=$this->service->registerUser($user);
+            $this->respondWithCode(201, $registeredUser);
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
         }
