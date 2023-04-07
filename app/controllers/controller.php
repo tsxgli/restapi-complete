@@ -14,12 +14,17 @@ class Controller
             $this->respondWithError(401, "No token provided");
             return;
         }
-
         // Read JWT from header
         $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
         // Strip the part "Bearer " from the header
         $arr = explode(" ", $authHeader);
-        $jwt = $arr[1];
+
+        if(isset($arr[1])) {
+            $jwt = $arr[1];
+        } else {
+            $this->respondWithError(401, "Invalid authorization header");
+            return;
+        }
 
         // Decode JWT
         $secret_key = "YOUR_SECRET_KEY";
@@ -34,6 +39,10 @@ class Controller
                 $this->respondWithError(401, $e->getMessage());
                 return;
             }
+        }
+        else{
+            $this->respondWithError(401, "No token provided");
+            return;
         }
     }
 

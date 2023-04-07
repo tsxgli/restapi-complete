@@ -78,7 +78,7 @@ class ProductRepository extends Repository
 
             $product->id = $this->connection->lastInsertId();
 
-            return $this->getOne($product->id);
+            return $this->getOne($product->id); 
         } catch (PDOException $e) {
             echo $e;
         }

@@ -53,7 +53,6 @@ class MovieRepository extends Repository
             $stmt->bindValue(':id', $id);
             $stmt->execute();
 
-
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $movie = $stmt->fetchAll();
 
@@ -98,23 +97,26 @@ class MovieRepository extends Repository
         }
     }
 
-    function addMovie($data)
+    function addMovie($movie)
     {
         try {
             $stmt = $this->connection->prepare('INSERT INTO Movie (title, director,description, genre, dateProduced, price,image, stock,rating) 
                                                     VALUES ( :title, :director,:description, :genre, :dateProduced, :price,:image, :stock,:rating);');
 
-            $stmt->bindParam(':title', $data['title']);
-            $stmt->bindParam(':director', $data['director']);
-            $stmt->bindParam(':description', $data['description']);
-            $stmt->bindParam(':genre', $data['genre']);
-            $stmt->bindParam(':dateProduced', $data['dateProduced']);
-            $stmt->bindParam(':price', $data['price']);
-            $stmt->bindParam(':stock', $data['stock']);
-            $stmt->bindParam(':rating', $data['rating']);
-            $stmt->bindParam(':image', $data['image']);
+            $stmt->bindParam(':title', $movie->title);
+            $stmt->bindParam(':director', $movie->director);
+            $stmt->bindParam(':description', $movie->description);
+            $stmt->bindParam(':genre', $movie->genre);
+            $stmt->bindParam(':dateProduced', $movie->dateProduced);
+            $stmt->bindParam(':price', $movie->price);
+            $stmt->bindParam(':stock', $movie->stock);
+            $stmt->bindParam(':rating', $movie->rating);
+            $stmt->bindParam(':image', $movie->image);
             $stmt->execute();
 
+            $movie->id=$this->connection->lastInsertId();
+            return $this->getMovie($movie->id);
+            
         } catch (PDOException $e) {
             echo "Adding movie failed: " . $e->getMessage();
         }

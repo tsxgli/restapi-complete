@@ -121,6 +121,7 @@ class UserController extends Controller
         try {
             $token = $this->checkForJwt();
             if (!$token) {
+                $this->respondWithError(401, "Invalid token");
                 return;
             }
 

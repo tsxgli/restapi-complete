@@ -62,7 +62,7 @@ class MovieController extends Controller
                 return;
             }
             $movie = $this->movieservice->deleteMovie($id);
-            if(!$movie){
+            if (!$movie) {
                 $this->respondWithError(404, "Movie not found");
                 return;
             }
@@ -105,25 +105,24 @@ class MovieController extends Controller
 
     public function addMovie()
     {
-        // A list of permitted file extensions
-        if (isset($_POST['addMovieBtn'])) {
-            $newImageName = $this->movePicture($_FILES['addImage']);
-            $data = array(
-                'title' => htmlspecialchars($_POST['addTitle']),
-                'description' => (htmlspecialchars($_POST['addDescription'])),
-                'dateProduced' => htmlspecialchars($_POST['addDateProduced']),
-                'director' => htmlspecialchars($_POST['addDirector']),
-                'genre' => htmlspecialchars($_POST['addGenre']),
-                'rating' => htmlspecialchars($_POST['addRating']),
-                'price' => htmlspecialchars($_POST['addPrice']),
-                'image' => ($newImageName),
-                'stock' => (100),
-            );
-            $this->movieservice->addMovie($data);
-            echo "<script>location.href='/admin/managemovies'</script>";
-            //exit;
-        }
+        try {
+            $token = $this->checkForJwt();
+            if (!$token) {
+                return;
+            }
+            $movie = $this->createObjectFromPostedJson("Models\\Movie");
+            
 
+            if(isset($_FILES['image'])){
+                $image = $this->movePicture($_FILES['image']);
+            }
+            $movie->image=$image;
+            $movie = $this->movieservice->addMovie($movie);
+
+            $this->respondWithCode(200,$movie);
+        } catch (Exception $e) {
+            $this->respondWithError(500, $e->getMessage());
+        }
     }
     public function movePicture($imageName)
     {
