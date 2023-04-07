@@ -86,7 +86,6 @@ class OrderController extends Controller
     {
         try {
             $email = (file_get_contents("php://input"));
-            print_r($email);
             $this->sendEmail($email);
             $this->respondWithCode(200, $email);
         } catch (Exception $e) {

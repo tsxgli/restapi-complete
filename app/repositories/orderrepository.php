@@ -12,7 +12,7 @@ class OrderRepository extends Repository
     function insertOrder($order)
     {
         try {
-            $query = "INSERT INTO Orders (userId, dateOrdered, movieId) VALUES (:userId, :dateOrdered, :movieId)";
+            $query = "INSERT INTO Orders (userID, dateOrdered, movieID) VALUES (:userId, :dateOrdered, :movieId)";
 
             $stmt = $this->connection->prepare($query);
             $stmt->bindValue(':movieId', $order->movieID);
@@ -42,7 +42,7 @@ class OrderRepository extends Repository
     }
     public function getOne($id){
         try {
-            $stmt = $this->connection->prepare("SELECT * FROM Orders where id = :id");
+            $stmt = $this->connection->prepare("SELECT * FROM Orders where _id = :id");
             $stmt->bindValue(':id', $id);
             $stmt->execute();
 
