@@ -6,7 +6,5 @@ class Order
     private int $userID;
     private int $movieID;
     private string $dateOrdered;
-
-
 }
 ?>

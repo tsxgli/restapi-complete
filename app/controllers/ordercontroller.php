@@ -49,7 +49,7 @@ class OrderController
 
     public function sendEmail($emailAddress)
     {
-        require __DIR__ . '/../config/phpmailerconfig.php'; 
+        require __DIR__ . '/../config/phpmailerconfig.php';
         // Instantiate a new PHPMailer object
         $mail = new PHPMailer;
 
@@ -80,7 +80,13 @@ class OrderController
         }
 
     }
+    public function sendMovieInEmail($order)
+    {
 
+
+    }
 }
+
+
 
 ?>
